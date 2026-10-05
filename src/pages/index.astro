@@ -19,7 +19,6 @@ const statusLabel = { shipped: 'Shipped', 'in-progress': 'In progress', planned:
           <a class="btn" href={site.email ? `mailto:${site.email}` : site.links.github}>
             {site.email ? 'Get in touch' : 'View my GitHub'}
           </a>
-          {site.resume && <a class="btn" href={site.resume} target="_blank" rel="noopener">Resume</a>}
         </div>
       </div>
       {site.photo && (

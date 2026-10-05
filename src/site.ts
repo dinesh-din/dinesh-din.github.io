@@ -19,7 +19,6 @@ export const site = {
     'I have shipped a healthcare platform on Angular, Spring Boot and AWS, and built a RAG microservice with Spring AI and pgvector. Now I am extending that into agent workflows with LangGraph, documented in my current build below.',
   ],
   photo: '/profile.jpg',
-  resume: '/resume.pdf',
   location: 'Dallas Open to relocate, All over USA',
   email: 'dinesh.26java@gmail.com',
   links: {
