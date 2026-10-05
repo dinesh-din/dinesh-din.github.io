@@ -21,5 +21,3 @@ Answering a research question well means breaking it down, checking more than on
 ## What I'm learning
 
 State machines for agents, checkpointing and resumable runs, evaluating citation accuracy, and tracing with LangSmith.
-
-> Replace this page with real results (screenshots, eval scores, lessons learned) as you build.

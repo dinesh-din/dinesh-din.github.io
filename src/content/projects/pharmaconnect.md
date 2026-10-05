@@ -29,5 +29,3 @@ PharmaConnect brings two everyday healthcare tasks into one platform: ordering m
 - **92% test coverage**
 
 The full source is on [GitHub](https://github.com/dinesh-din/Pharma-Connect).
-
-> Add the details that make this stand out: who the users are, which roles you modeled in RBAC, how the Jenkins pipeline runs tests and deploys, and how you reached 92% coverage.

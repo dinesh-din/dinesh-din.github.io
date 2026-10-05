@@ -18,5 +18,3 @@ A full-stack generative AI application with two sides: a chat experience and ima
 - **Tooling:** **Node.js** for the frontend toolchain.
 
 The full source is on [GitHub](https://github.com/dinesh-din/Gen-AI-Chat-and-Image).
-
-> Add the details that make this stand out: exactly what the chat does (streaming replies, conversation history, system prompts), what the image feature does (generate from text, edit, or analyze), screenshots of the UI, and any limits or costs you handled.
