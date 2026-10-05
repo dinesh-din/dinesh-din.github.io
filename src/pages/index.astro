@@ -1,10 +1,30 @@
 ---
 import Base from '../layouts/Base.astro';
+import Avatar from '../components/Avatar.astro';
+import ProjectShowcase from '../components/ProjectShowcase.astro';
+import SkillsExplorer from '../components/SkillsExplorer.astro';
+import Buddy from '../components/Buddy.astro';
 import { getCollection } from 'astro:content';
 import { site } from '../site';
+import { extras } from '../extras';
 
 const projects = (await getCollection('projects')).sort((a, b) => a.data.order - b.data.order);
-const statusLabel = { shipped: 'Shipped', 'in-progress': 'In progress', planned: 'Planned' } as const;
+
+const stats = [
+  ...extras.stats,
+  { value: projects.length, decimals: 0, suffix: '', label: 'Personal projects' },
+  { value: 3, decimals: 0, suffix: '', label: 'Clouds: AWS, Azure and GCP' },
+];
+const facts = extras.funFacts || [];
+const building = projects.filter((p) => p.data.status === 'in-progress');
+const achievements = extras.achievements || [];
+const testimonials = extras.testimonials || [];
+const formspree = extras.formspree || '';
+// mailto: does nothing on computers with no mail app, so Gmail addresses open Gmail's compose window instead.
+const isGmail = /@(gmail|googlemail)\.com$/i.test(site.email || '');
+const writeHref = isGmail
+  ? `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(site.email)}&su=${encodeURIComponent('Hello from your portfolio')}`
+  : `mailto:${site.email}`;
 ---
 
 <Base>
@@ -13,6 +33,9 @@ const statusLabel = { shipped: 'Shipped', 'in-progress': 'In progress', planned:
       <div>
         <p class="eyebrow">{site.role}</p>
         <h1>Hi, I'm {site.name}.</h1>
+        <p class="rotator-line">
+          I build <span class="rotator" data-words={JSON.stringify(extras.roles)}>{extras.roles[0]}</span><span class="caret" aria-hidden="true"></span>
+        </p>
         <p class="lead">{site.tagline}</p>
         <div class="cta">
           <a class="btn primary" href="#projects">See my projects</a>
@@ -22,10 +45,35 @@ const statusLabel = { shipped: 'Shipped', 'in-progress': 'In progress', planned:
         <div class="tags hero-tags">
           {site.highlights.map((h) => <span class="tag">{h}</span>)}
         </div>
+        {building.length > 0 && (
+          <a class="building" href="#projects">
+            <span class="pulse" aria-hidden="true"></span>
+            <span><strong>Currently building:</strong> {building.map((b) => b.data.title).join(' and ')}</span>
+          </a>
+        )}
       </div>
-      {site.photo && (
-        <img class="avatar" src={site.photo} alt={`Photo of ${site.name}`} width="220" height="220" />
-      )}
+      <Avatar />
+    </div>
+  </section>
+
+  <section class="stats" aria-label="Highlights">
+    <div class="wrap">
+      <div class="stat-grid">
+        {stats.map((s) => (
+          <div class="stat">
+            <div class="stat-value">
+              <span data-count={s.value} data-decimals={s.decimals}>{s.value.toFixed(s.decimals)}</span>{s.suffix}
+            </div>
+            <div class="stat-label">{s.label}</div>
+          </div>
+        ))}
+        {facts.length > 0 && (
+          <button class="stat fun-tile" type="button" data-facts={JSON.stringify(facts)} aria-live="polite" title="Click for another fun fact">
+            <span class="stat-value fun-big">{facts[0].big}</span>
+            <span class="stat-label fun-text">{facts[0].text}</span>
+          </button>
+        )}
+      </div>
     </div>
   </section>
 
@@ -36,6 +84,34 @@ const statusLabel = { shipped: 'Shipped', 'in-progress': 'In progress', planned:
       {site.location && <p class="facts">Based in {site.location}</p>}
     </div>
   </section>
+
+  {(achievements.length > 0 || testimonials.length > 0) && (
+    <section id="recognition">
+      <div class="wrap">
+        <h2>Recognition</h2>
+        {achievements.length > 0 && (
+          <div class="badges">
+            {achievements.map((a) => (
+              <div class="badge-card">
+                <strong>{a.title}</strong>
+                <span>{a.detail}</span>
+              </div>
+            ))}
+          </div>
+        )}
+        {testimonials.length > 0 && (
+          <div class="quotes">
+            {testimonials.map((t) => (
+              <figure class="quote">
+                <blockquote>{t.quote}</blockquote>
+                <figcaption><strong>{t.name}</strong>, {t.role}</figcaption>
+              </figure>
+            ))}
+          </div>
+        )}
+      </div>
+    </section>
+  )}
 
   {site.experience.length > 0 && (
     <section id="experience">
@@ -62,52 +138,104 @@ const statusLabel = { shipped: 'Shipped', 'in-progress': 'In progress', planned:
     <div class="wrap">
       <h2>{site.projectsTitle}</h2>
       <p class="section-intro">{site.projectsIntro}</p>
-      <div class="grid">
-        {projects.map((p) => (
-          <a class="card" href={`/projects/${p.id}/`}>
-            {p.data.image && <img class="card-img" src={p.data.image} alt="" loading="lazy" />}
-            <span class="status">{statusLabel[p.data.status]}</span>
-            <h3>{p.data.title}</h3>
-            <p>{p.data.summary}</p>
-            <div class="tags">
-              {p.data.stack.map((s) => <span class="tag">{s}</span>)}
-            </div>
-          </a>
-        ))}
-      </div>
+      <ProjectShowcase projects={projects} />
     </div>
   </section>
 
   <section id="skills">
     <div class="wrap">
       <h2>Skills</h2>
-      <div class="skills">
-        {Object.entries(site.skills).map(([group, items]) => (
-          <div>
-            <h3>{group}</h3>
-            <div class="tags">
-              {items.map((s) => <span class="tag">{s}</span>)}
-            </div>
-          </div>
-        ))}
-      </div>
+      <SkillsExplorer />
     </div>
   </section>
 
   <section id="contact">
     <div class="wrap">
       <h2>Contact</h2>
-      {site.email ? (
-        <p>
-          The best way to reach me is <a href={`mailto:${site.email}`}>{site.email}</a>.
-        </p>
-      ) : (
-        <p>The best way to reach me right now is through GitHub.</p>
+      <p class="section-intro">Have a role, a project or a question? Say hello.</p>
+      <div class="contact-actions">
+        {site.email && (
+          <button class="btn primary" type="button" id="copy-email" data-email={site.email}>Copy email</button>
+        )}
+        {site.email && <a class="btn" href={writeHref} target={isGmail ? '_blank' : undefined} rel={isGmail ? 'noopener' : undefined}>Write an email</a>}
+        {site.links.linkedin && <a class="btn" href={site.links.linkedin} target="_blank" rel="noopener">LinkedIn</a>}
+        <a class="btn" href={site.links.github} target="_blank" rel="noopener">GitHub</a>
+      </div>
+      {site.email && <p class="contact-email">{site.email} <span id="copy-note" role="status"></span></p>}
+
+      {formspree && (
+        <form class="contact-form" id="contact-form" action={`https://formspree.io/f/${formspree}`} method="POST">
+          <label>Your name<input name="name" required autocomplete="name" /></label>
+          <label>Your email<input name="email" type="email" required autocomplete="email" /></label>
+          <label>Message<textarea name="message" rows="4" required></textarea></label>
+          <button class="btn primary" type="submit">Send message</button>
+          <p id="form-note" role="status"></p>
+        </form>
       )}
-      <p>
-        <a href={site.links.github}>GitHub</a>
-        {site.links.linkedin && <> · <a href={site.links.linkedin}>LinkedIn</a></>}
-      </p>
     </div>
   </section>
+
+  <Buddy />
 </Base>
+
+<script>
+  const tile = document.querySelector<HTMLElement>('.fun-tile');
+  if (tile) {
+    let facts: { big: string; text: string }[] = [];
+    try { facts = JSON.parse(tile.dataset.facts || '[]'); } catch { facts = []; }
+    const big = tile.querySelector<HTMLElement>('.fun-big');
+    const text = tile.querySelector<HTMLElement>('.fun-text');
+    if (facts.length > 1 && big && text) {
+      let last = -1;
+      try { last = Number(sessionStorage.getItem('fact') ?? -1); } catch {}
+      const show = (i: number) => {
+        big.textContent = facts[i].big;
+        text.textContent = facts[i].text;
+        last = i;
+        try { sessionStorage.setItem('fact', String(i)); } catch {}
+      };
+      const next = () => {
+        let i = Math.floor(Math.random() * facts.length);
+        if (i === last) i = (i + 1) % facts.length;
+        show(i);
+      };
+      next(); // a different fact on every visit
+      tile.addEventListener('click', next);
+    }
+  }
+</script>
+
+<script>
+  // Copy email button
+  const copyBtn = document.getElementById('copy-email');
+  const copyNote = document.getElementById('copy-note');
+  copyBtn?.addEventListener('click', async () => {
+    const email = copyBtn.dataset.email || '';
+    try {
+      await navigator.clipboard.writeText(email);
+      if (copyNote) copyNote.textContent = 'Copied!';
+      window.dispatchEvent(new CustomEvent('buddy:say', { detail: { text: 'Email copied. Talk soon!', found: true, ms: 3000 } }));
+    } catch {
+      if (copyNote) copyNote.textContent = 'Press Ctrl+C to copy it.';
+    }
+    window.setTimeout(() => { if (copyNote) copyNote.textContent = ''; }, 2500);
+  });
+
+  // Contact form (Formspree) without leaving the page
+  const form = document.getElementById('contact-form') as HTMLFormElement | null;
+  const note = document.getElementById('form-note');
+  form?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    if (note) note.textContent = 'Sending...';
+    try {
+      const res = await fetch(form.action, { method: 'POST', body: new FormData(form), headers: { Accept: 'application/json' } });
+      if (res.ok) {
+        form.reset();
+        if (note) note.textContent = 'Thanks! Your message is on its way.';
+        window.dispatchEvent(new CustomEvent('buddy:say', { detail: { text: 'Message sent!', found: true, ms: 3500 } }));
+      } else if (note) note.textContent = 'Something went wrong. Please try again or use the email button.';
+    } catch {
+      if (note) note.textContent = 'Could not send. Please check your connection and try again.';
+    }
+  });
+</script>

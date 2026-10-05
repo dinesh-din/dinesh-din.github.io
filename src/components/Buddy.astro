@@ -1,0 +1,299 @@
+---
+import { extras } from '../extras';
+
+const c = {
+  skin: '#c68a63',
+  hair: '#1a1410',
+  jacket: '#6c3bff',
+  shirt: '#ffffff',
+  beard: true,
+  glasses: false,
+  ...extras.cartoon,
+};
+const buddy = { enabled: true, lines: {}, tips: [], ...extras.buddy };
+---
+
+{buddy.enabled && (
+  <Fragment>
+    <div class="progress" aria-hidden="true"><span></span></div>
+
+    <aside
+      class="buddy"
+      data-mode="idle"
+      data-lines={JSON.stringify(buddy.lines)}
+      data-tips={JSON.stringify(buddy.tips)}
+      aria-label="Portfolio buddy"
+    >
+      <div class="b-bubble"><span class="b-text">Hi again!</span></div>
+
+      <div class="b-wrap">
+        <button class="b-close" type="button" aria-label="Hide the buddy">×</button>
+        <div class="b-hop">
+          <button class="b-body" type="button" aria-label="Click the buddy for a tip">
+            <svg
+              viewBox="0 0 160 160"
+              class="buddy-svg"
+              aria-hidden="true"
+              style={`--skin:${c.skin};--hair:${c.hair};--jacket:${c.jacket};--shirt:${c.shirt}`}
+            >
+              <defs>
+                <clipPath id="bd-screen"><rect x="110" y="104" width="38" height="48" rx="4" /></clipPath>
+              </defs>
+
+              <!-- body -->
+              <path d="M18 162 C18 134 48 122 80 122 C112 122 142 134 142 162 Z" fill="var(--jacket)" />
+              <path d="M66 123 L80 144 L94 123 Z" fill="var(--shirt)" />
+              <path d="M66 123 L74 126 L80 144 L62 136 Z" fill="#000" opacity=".2" />
+              <path d="M94 123 L86 126 L80 144 L98 136 Z" fill="#000" opacity=".2" />
+              <!-- neck, ears, head -->
+              <path d="M70 100 H90 V124 C86 130 74 130 70 124 Z" fill="var(--skin)" />
+              <ellipse cx="49" cy="76" rx="5" ry="8" fill="var(--skin)" />
+              <ellipse cx="111" cy="76" rx="5" ry="8" fill="var(--skin)" />
+              <ellipse cx="80" cy="72" rx="31" ry="35" fill="var(--skin)" />
+              {c.beard && (
+                <path d="M49 72 C50 100 64 111 80 111 C96 111 110 100 111 72 C107 87 98 94 80 94 C62 94 53 87 49 72 Z" fill="var(--hair)" />
+              )}
+              <path d="M70 98 Q80 106 90 98 Q80 102 70 98 Z" fill="#fff" />
+              <path d="M69 97 Q80 108 91 97" fill="none" stroke="#8a4b3c" stroke-width="2" stroke-linecap="round" />
+              <path d="M81 74 Q76 86 83 87" fill="none" stroke="#000" stroke-opacity=".28" stroke-width="2.4" stroke-linecap="round" />
+              <path d="M47 70 C42 36 62 24 82 24 C103 24 119 38 113 70 C111 56 104 47 93 45 C78 50 60 49 51 61 Z" fill="var(--hair)" />
+              <path d="M62 62 Q70 57 78 61" fill="none" stroke="var(--hair)" stroke-width="3.2" stroke-linecap="round" />
+              <path d="M86 61 Q94 57 102 62" fill="none" stroke="var(--hair)" stroke-width="3.2" stroke-linecap="round" />
+              <g class="b-eyes">
+                <ellipse cx="68" cy="74" rx="3.8" ry="4.6" fill="#1a1410" />
+                <ellipse cx="94" cy="74" rx="3.8" ry="4.6" fill="#1a1410" />
+                <circle cx="69.4" cy="72.4" r="1.3" fill="#fff" />
+                <circle cx="95.4" cy="72.4" r="1.3" fill="#fff" />
+              </g>
+              {c.glasses && (
+                <g fill="none" stroke="#1c1b19" stroke-width="2.4">
+                  <rect x="57" y="65" width="23" height="18" rx="6" />
+                  <rect x="82" y="65" width="23" height="18" rx="6" />
+                </g>
+              )}
+
+              <!-- Props: only one shows at a time -->
+              <g class="prop prop-projects">
+                <rect x="106" y="98" width="46" height="60" rx="8" fill="#1a1240" />
+                <rect x="110" y="104" width="38" height="48" rx="4" fill="#fff" />
+                <g clip-path="url(#bd-screen)">
+                  <g class="cards">
+                    <rect x="114" y="108" width="30" height="14" rx="3" fill="#ff3d8b" />
+                    <rect x="114" y="128" width="30" height="14" rx="3" fill="#ffc800" />
+                    <rect x="114" y="148" width="30" height="14" rx="3" fill="#00c9a0" />
+                    <rect x="114" y="168" width="30" height="14" rx="3" fill="#ff3d8b" />
+                  </g>
+                </g>
+                <ellipse cx="106" cy="142" rx="8" ry="9" fill="var(--skin)" />
+                <circle class="finger" cx="131" cy="140" r="5" fill="var(--skin)" stroke="#1a1240" stroke-width="1.5" />
+              </g>
+
+              <g class="prop prop-skills">
+                <g class="lens">
+                  <path d="M114 99 L132 120" stroke="#ffc800" stroke-width="9" stroke-linecap="round" />
+                  <circle cx="102" cy="86" r="17" fill="#35b0ff" fill-opacity=".3" stroke="#ffc800" stroke-width="6" />
+                  <path d="M92 82 A11 11 0 0 1 100 75" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" />
+                </g>
+                <g class="sparkle">
+                  <path d="M134 34 l3 8 8 3 -8 3 -3 8 -3 -8 -8 -3 8 -3 z" fill="#ffc800" />
+                  <path d="M20 44 l2 6 6 2 -6 2 -2 6 -2 -6 -6 -2 6 -2 z" fill="#ff3d8b" />
+                  <path d="M146 76 l2 5 5 2 -5 2 -2 5 -2 -5 -5 -2 5 -2 z" fill="#00c9a0" />
+                </g>
+              </g>
+
+              <g class="prop prop-wave">
+                <g class="b-arm">
+                  <path d="M128 162 C126 142 130 126 138 108" fill="none" stroke="var(--jacket)" stroke-width="18" stroke-linecap="round" />
+                  <rect x="128" y="80" width="20" height="30" rx="10" fill="var(--skin)" />
+                  <rect x="121" y="92" width="11" height="8" rx="4" fill="var(--skin)" transform="rotate(-24 127 96)" />
+                </g>
+              </g>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </aside>
+  </Fragment>
+)}
+
+<script>
+  const buddy = document.querySelector<HTMLElement>('.buddy');
+  const bar = document.querySelector<HTMLElement>('.progress span');
+
+  if (buddy) {
+    const text = buddy.querySelector<HTMLElement>('.b-text');
+    const body = buddy.querySelector<HTMLElement>('.b-body');
+    const close = buddy.querySelector<HTMLElement>('.b-close');
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    let lines: Record<string, string> = {};
+    let tips: string[] = [];
+    try { lines = JSON.parse(buddy.dataset.lines || '{}'); } catch { lines = {}; }
+    try { tips = JSON.parse(buddy.dataset.tips || '[]'); } catch { tips = []; }
+
+    let hideTimer: number | undefined;
+    const restart = (cls: string) => {
+      buddy.classList.remove(cls);
+      void buddy.offsetWidth; // let the animation start again
+      buddy.classList.add(cls);
+    };
+
+    const say = (msg: string, opts: { hop?: boolean; ms?: number; found?: boolean } = {}) => {
+      if (!text) return;
+      text.textContent = msg;
+      buddy.classList.add('talking');
+      window.clearTimeout(hideTimer);
+      hideTimer = window.setTimeout(() => buddy.classList.remove('talking'), opts.ms ?? 4800);
+      if (!reduce) {
+        if (opts.hop !== false) restart('hop');
+        if (opts.found) restart('found');
+      }
+    };
+
+    // Other parts of the page can make the buddy talk.
+    window.addEventListener('buddy:say', (e) => {
+      const d = (e as CustomEvent).detail || {};
+      if (d.text) say(String(d.text), { found: Boolean(d.found), ms: d.ms });
+    });
+
+    // Change pose and message for the section in the middle of the screen.
+    const modeFor: Record<string, string> = {
+      about: 'idle', experience: 'idle', projects: 'projects', skills: 'skills', contact: 'wave',
+    };
+    let current = '';
+    const sections = Object.keys(modeFor)
+      .map((id) => document.getElementById(id))
+      .filter((el): el is HTMLElement => Boolean(el));
+
+    if ('IntersectionObserver' in window) {
+      const sectionObserver = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((en) => {
+            if (!en.isIntersecting || en.target.id === current) return;
+            current = en.target.id;
+            buddy.dataset.mode = modeFor[current] || 'idle';
+            if (lines[current]) say(lines[current], { ms: 5200 });
+          });
+        },
+        { rootMargin: '-45% 0px -50% 0px' }
+      );
+      sections.forEach((s) => sectionObserver.observe(s));
+
+      // Show the buddy once the hero has scrolled away.
+      const hero = document.querySelector('.hero');
+      if (hero) {
+        new IntersectionObserver(
+          (entries) => {
+            const r = entries[0].intersectionRatio;
+            buddy.classList.toggle('show', r < 0.35);
+          },
+          { threshold: [0, 0.35, 1] }
+        ).observe(hero);
+      } else {
+        buddy.classList.add('show');
+      }
+    } else {
+      buddy.classList.add('show');
+    }
+
+    // Walk while the page scrolls.
+    let walkTimer: number | undefined;
+    window.addEventListener(
+      'scroll',
+      () => {
+        buddy.classList.add('walking');
+        window.clearTimeout(walkTimer);
+        walkTimer = window.setTimeout(() => buddy.classList.remove('walking'), 220);
+      },
+      { passive: true }
+    );
+
+    // Confetti burst (skipped for people who prefer reduced motion).
+    const confetti = () => {
+      if (reduce) return;
+      const colors = ['#ff3d8b', '#6c3bff', '#ffc800', '#00c9a0', '#35b0ff', '#ff7a1a'];
+      const r = (body ?? buddy).getBoundingClientRect();
+      const ox = r.left + r.width / 2;
+      const oy = r.top + r.height / 3;
+      for (let i = 0; i < 46; i++) {
+        const bit = document.createElement('i');
+        const size = 6 + Math.random() * 7;
+        bit.style.cssText = `position:fixed;z-index:60;left:${ox}px;top:${oy}px;width:${size}px;height:${size * 0.6}px;background:${colors[i % colors.length]};border:1.5px solid #1a1240;border-radius:2px;pointer-events:none`;
+        document.body.appendChild(bit);
+        const dx = (Math.random() - 0.5) * 520;
+        const dy = -140 - Math.random() * 260;
+        bit
+          .animate(
+            [
+              { transform: 'translate(0,0) rotate(0deg)', opacity: 1 },
+              { transform: `translate(${dx * 0.6}px,${dy}px) rotate(${Math.random() * 360}deg)`, opacity: 1, offset: 0.45 },
+              { transform: `translate(${dx}px,${dy + 420}px) rotate(${Math.random() * 720}deg)`, opacity: 0 },
+            ],
+            { duration: 1500 + Math.random() * 900, easing: 'cubic-bezier(.2,.7,.3,1)' }
+          )
+          .finished.then(() => bit.remove())
+          .catch(() => bit.remove());
+      }
+    };
+    const dance = (msg: string) => {
+      buddy.classList.remove('dismissed');
+      buddy.classList.add('show');
+      say(msg, { ms: 4200, hop: false });
+      if (!reduce) restart('dance');
+      window.setTimeout(() => buddy.classList.remove('dance'), 3200);
+      confetti();
+    };
+
+    // Click for a tip. Five quick clicks throw confetti.
+    let tipIndex = 0;
+    let clicks: number[] = [];
+    body?.addEventListener('click', () => {
+      const now = Date.now();
+      clicks = clicks.filter((t) => now - t < 2500);
+      clicks.push(now);
+      if (clicks.length >= 5) {
+        clicks = [];
+        dance('Whee! You found the party button!');
+        return;
+      }
+      if (tips.length === 0) return;
+      say(tips[tipIndex % tips.length], { ms: 5200 });
+      tipIndex++;
+    });
+
+    // Konami code: up up down down left right left right b a
+    const code = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
+    let pos = 0;
+    window.addEventListener('keydown', (e) => {
+      const t = e.target as HTMLElement | null;
+      if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA')) return;
+      const k = e.key.length === 1 ? e.key.toLowerCase() : e.key;
+      pos = k === code[pos] ? pos + 1 : k === code[0] ? 1 : 0;
+      if (pos === code.length) {
+        pos = 0;
+        dance('Konami code! Dance party time!');
+      }
+    });
+
+    close?.addEventListener('click', () => {
+      buddy.classList.add('dismissed');
+      try { sessionStorage.setItem('buddy-hidden', '1'); } catch {}
+    });
+    try { if (sessionStorage.getItem('buddy-hidden') === '1') buddy.classList.add('dismissed'); } catch {}
+  }
+
+  // Reading-progress bar along the top edge.
+  if (bar) {
+    let ticking = false;
+    const update = () => {
+      const max = document.documentElement.scrollHeight - window.innerHeight;
+      const p = max > 0 ? Math.min(window.scrollY / max, 1) : 0;
+      bar.style.width = `${(p * 100).toFixed(1)}%`;
+      ticking = false;
+    };
+    window.addEventListener('scroll', () => {
+      if (!ticking) { ticking = true; requestAnimationFrame(update); }
+    }, { passive: true });
+    update();
+  }
+</script>

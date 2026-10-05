@@ -14,7 +14,21 @@ const projects = defineCollection({
     // Image paths live in the `public` folder, e.g. /images/projects/rag.png
     image: z.string().optional(),
     gallery: z.array(z.string()).default([]),
+    // Optional case-study boxes shown above the write-up on the project page.
+    problem: z.string().optional(),
+    approach: z.string().optional(),
+    next: z.string().optional(),
   }),
 });
 
-export const collections = { projects };
+const notes = defineCollection({
+  loader: glob({ pattern: '**/*.md', base: './src/content/notes' }),
+  schema: z.object({
+    title: z.string(),
+    summary: z.string(),
+    date: z.coerce.date(),
+    draft: z.boolean().default(false),
+  }),
+});
+
+export const collections = { projects, notes };

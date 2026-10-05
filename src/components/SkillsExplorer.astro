@@ -1,0 +1,102 @@
+---
+import { site } from '../site';
+import { getCollection } from 'astro:content';
+
+// A skill is "used in my projects" when it matches a technology in any project's stack.
+const projectStack = (await getCollection('projects')).flatMap((p) => p.data.stack.map((t) => t.toLowerCase()));
+const clean = (t: string) => t.toLowerCase().replace(/\(.*?\)/g, '').trim();
+const usedIn = (skill: string) => {
+  const c = clean(skill);
+  return projectStack.some((t) => t === c || (t.length > 3 && (c.startsWith(t + ' ') || c.endsWith(' ' + t))));
+};
+
+const groups = Object.entries(site.skills);
+const total = groups.reduce((n, [, items]) => n + items.length, 0);
+const openCount = 4; // how many groups start expanded
+---
+
+<div class="skills-explorer" data-total={total}>
+  <div class="skills-tools">
+    <input
+      class="skill-search"
+      type="search"
+      placeholder="Search skills, e.g. Kafka, AWS, Angular"
+      aria-label="Search skills"
+      autocomplete="off"
+    />
+    <button class="mini-btn" type="button" data-expand>Expand all</button>
+    <button class="mini-btn" type="button" data-collapse>Collapse all</button>
+    <span class="used-legend"><span class="used-star" aria-hidden="true">★</span> used in my projects</span>
+  </div>
+
+  <div class="skill-groups">
+    {groups.map(([group, items], i) => (
+      <details class="skill-group" open={i < openCount} data-initial-open={i < openCount ? 'true' : 'false'}>
+        <summary>
+          <span class="sg-name">{group}</span>
+        </summary>
+        <div class="tags">
+          {items.map((s) => (
+            <span class={usedIn(s) ? 'tag used' : 'tag'} data-skill={s.toLowerCase()} title={usedIn(s) ? 'Used in my projects' : undefined}>{s}</span>
+          ))}
+        </div>
+      </details>
+    ))}
+  </div>
+
+  <p class="skill-empty" hidden>No skills match that search.</p>
+</div>
+
+<script>
+  document.querySelectorAll<HTMLElement>('.skills-explorer').forEach((root) => {
+    const input = root.querySelector<HTMLInputElement>('.skill-search');
+    const count = root.querySelector<HTMLElement>('.skill-count');
+    const empty = root.querySelector<HTMLElement>('.skill-empty');
+    const groups = Array.from(root.querySelectorAll<HTMLDetailsElement>('.skill-group'));
+    const total = Number(root.dataset.total || 0);
+    if (!input) return;
+
+    let lastQuery = '';
+    const tellBuddy = (q: string, matches: number) => {
+      let text = '';
+      if (q) {
+        text = matches > 0 ? `Found ${matches} for "${q}"!` : `Hmm, nothing for "${q}". Try Java or AWS!`;
+      } else if (lastQuery) {
+        text = 'Looking for anything else?';
+      }
+      lastQuery = q;
+      if (text) {
+        window.dispatchEvent(
+          new CustomEvent('buddy:say', { detail: { text, found: Boolean(q) && matches > 0, ms: 5000 } })
+        );
+      }
+    };
+
+    const apply = () => {
+      const q = input.value.trim().toLowerCase();
+      let matches = 0;
+
+      groups.forEach((g) => {
+        const tags = Array.from(g.querySelectorAll<HTMLElement>('.tag'));
+        let groupMatches = 0;
+        tags.forEach((t) => {
+          const hit = !q || (t.dataset.skill || '').includes(q);
+          t.hidden = !hit;
+          if (hit) groupMatches++;
+        });
+        g.hidden = groupMatches === 0;
+        if (q) g.open = groupMatches > 0;
+        else g.open = g.dataset.initialOpen === 'true';
+        matches += groupMatches;
+      });
+
+      if (count) count.textContent = q ? `${matches} match${matches === 1 ? '' : 'es'}` : `${total} skills`;
+      if (empty) empty.hidden = matches > 0;
+      tellBuddy(q, matches);
+    };
+
+    input.addEventListener('input', apply);
+    root.querySelector('[data-expand]')?.addEventListener('click', () => groups.forEach((g) => { if (!g.hidden) g.open = true; }));
+    root.querySelector('[data-collapse]')?.addEventListener('click', () => groups.forEach((g) => { g.open = false; }));
+  });
+</script>

@@ -1,0 +1,175 @@
+---
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  projects: CollectionEntry<'projects'>[];
+}
+
+const { projects } = Astro.props;
+const statusLabel = { shipped: 'Shipped', 'in-progress': 'In progress', planned: 'Planned' } as const;
+const pad = (n: number) => String(n).padStart(2, '0');
+---
+
+<div class="showcase" data-view="slides">
+  <div class="view-toggle" role="group" aria-label="Project view">
+    <button type="button" data-view-btn="slides" aria-pressed="true">Slideshow</button>
+    <button type="button" data-view-btn="grid" aria-pressed="false">Grid</button>
+  </div>
+
+  <div class="carousel" data-carousel tabindex="0" role="region" aria-roledescription="carousel" aria-label="Personal projects">
+    <div class="track">
+      {projects.map((p, i) => (
+        <article class="slide" aria-roledescription="slide" aria-label={`${i + 1} of ${projects.length}`}>
+          <div class="slide-visual">
+            {p.data.image ? (
+              <img src={p.data.image} alt="" loading="lazy" />
+            ) : (
+              <span class="slide-num" aria-hidden="true">{pad(i + 1)}</span>
+            )}
+          </div>
+          <div class="slide-body">
+            <span class="status">{statusLabel[p.data.status]}</span>
+            <h3>{p.data.title}</h3>
+            <p>{p.data.summary}</p>
+            <div class="tags">
+              {p.data.stack.map((s) => <span class="tag">{s}</span>)}
+            </div>
+            <div class="slide-actions">
+              <a class="btn primary" href={`/projects/${p.id}/`}>Read case study</a>
+              {p.data.repo && <a class="btn" href={p.data.repo} target="_blank" rel="noopener">Source</a>}
+              {p.data.demo && <a class="btn" href={p.data.demo} target="_blank" rel="noopener">Live demo</a>}
+            </div>
+          </div>
+        </article>
+      ))}
+    </div>
+
+    <button class="car-btn prev" type="button" aria-label="Previous project">‹</button>
+    <button class="car-btn next" type="button" aria-label="Next project">›</button>
+
+    <div class="dots">
+      {projects.map((p, i) => (
+        <button class="dot" type="button" aria-label={`Go to project ${i + 1}: ${p.data.title}`} aria-current={i === 0 ? 'true' : 'false'}></button>
+      ))}
+    </div>
+  </div>
+
+  <div class="grid" data-grid hidden>
+    {projects.map((p) => (
+      <a class="card" href={`/projects/${p.id}/`}>
+        {p.data.image && <img class="card-img" src={p.data.image} alt="" loading="lazy" />}
+        <span class="status">{statusLabel[p.data.status]}</span>
+        <h3>{p.data.title}</h3>
+        <p>{p.data.summary}</p>
+        <div class="tags">
+          {p.data.stack.map((s) => <span class="tag">{s}</span>)}
+        </div>
+      </a>
+    ))}
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll<HTMLElement>('.showcase').forEach((root) => {
+    const carousel = root.querySelector<HTMLElement>('[data-carousel]');
+    const grid = root.querySelector<HTMLElement>('[data-grid]');
+    const track = carousel?.querySelector<HTMLElement>('.track');
+    if (!carousel || !grid || !track) return;
+
+    const slides = Array.from(track.children) as HTMLElement[];
+    const dots = Array.from(carousel.querySelectorAll<HTMLButtonElement>('.dot'));
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let index = 0;
+    let auto: number | undefined;
+    let hovering = false;
+    let visible = false;
+
+    const setDots = () =>
+      dots.forEach((d, k) => d.setAttribute('aria-current', k === index ? 'true' : 'false'));
+
+    // Tell the buddy which project is on screen.
+    const tellBuddy = () => {
+      const title = slides[index]?.querySelector('h3')?.textContent || '';
+      window.dispatchEvent(
+        new CustomEvent('buddy:say', {
+          detail: { text: `Project ${index + 1} of ${slides.length}: ${title}`, ms: 3800 },
+        })
+      );
+    };
+
+    const go = (i: number) => {
+      index = (i + slides.length) % slides.length;
+      track.scrollTo({ left: index * track.clientWidth, behavior: reduce ? 'auto' : 'smooth' });
+      setDots();
+      tellBuddy();
+    };
+
+    track.addEventListener(
+      'scroll',
+      () => {
+        const next = Math.round(track.scrollLeft / Math.max(track.clientWidth, 1));
+        if (next !== index && next >= 0 && next < slides.length) {
+          index = next;
+          setDots();
+          tellBuddy();
+        }
+      },
+      { passive: true }
+    );
+
+    window.addEventListener('resize', () => {
+      track.scrollTo({ left: index * track.clientWidth, behavior: 'auto' });
+    });
+
+    const stopAuto = () => {
+      if (auto) { window.clearInterval(auto); auto = undefined; }
+    };
+    const startAuto = () => {
+      if (reduce || auto || slides.length < 2) return;
+      auto = window.setInterval(() => {
+        if (!hovering && visible && !document.hidden) go(index + 1);
+      }, 6500);
+    };
+
+    // Any manual control stops the autoplay for good.
+    const manual = (fn: () => void) => () => { stopAuto(); fn(); };
+    carousel.querySelector('.prev')?.addEventListener('click', manual(() => go(index - 1)));
+    carousel.querySelector('.next')?.addEventListener('click', manual(() => go(index + 1)));
+    dots.forEach((d, k) => d.addEventListener('click', manual(() => go(k))));
+
+    carousel.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowLeft') { e.preventDefault(); stopAuto(); go(index - 1); }
+      if (e.key === 'ArrowRight') { e.preventDefault(); stopAuto(); go(index + 1); }
+    });
+
+    carousel.addEventListener('mouseenter', () => { hovering = true; });
+    carousel.addEventListener('mouseleave', () => { hovering = false; });
+    carousel.addEventListener('focusin', () => { hovering = true; });
+    carousel.addEventListener('focusout', () => { hovering = false; });
+    carousel.addEventListener('touchstart', stopAuto, { passive: true });
+
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver((entries) => {
+        visible = entries.some((en) => en.isIntersecting);
+      }, { threshold: 0.4 }).observe(carousel);
+    } else {
+      visible = true;
+    }
+    startAuto();
+
+    // Slideshow / grid switch
+    root.querySelectorAll<HTMLButtonElement>('[data-view-btn]').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const view = btn.dataset.viewBtn;
+        const slidesView = view === 'slides';
+        root.dataset.view = slidesView ? 'slides' : 'grid';
+        carousel.hidden = !slidesView;
+        grid.hidden = slidesView;
+        root.querySelectorAll<HTMLButtonElement>('[data-view-btn]').forEach((b) =>
+          b.setAttribute('aria-pressed', String(b === btn))
+        );
+        if (slidesView) track.scrollTo({ left: index * track.clientWidth, behavior: 'auto' });
+      });
+    });
+  });
+</script>

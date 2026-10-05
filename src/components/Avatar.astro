@@ -1,0 +1,163 @@
+---
+import { site } from '../site';
+import { extras } from '../extras';
+
+const c = {
+  skin: '#c68a63',
+  hair: '#1a1410',
+  jacket: '#6c3bff',
+  shirt: '#ffffff',
+  beard: true,
+  glasses: false,
+  ...extras.cartoon,
+};
+
+// Fall back to the cartoon if the chosen image is not set yet.
+let mode = extras.avatarMode;
+if (mode === 'bitmoji' && !extras.bitmoji) mode = 'cartoon';
+if (mode === 'photo' && !site.photo) mode = 'cartoon';
+
+const frontIsCartoon = mode === 'cartoon';
+const frontIsBitmoji = mode === 'bitmoji';
+const frontIsPhoto = mode === 'photo';
+// A second face (the real photo) the visitor can flip to.
+const canFlip = Boolean(site.photo) && !frontIsPhoto;
+const greetings = extras.greetings.length ? extras.greetings : ['Hello!'];
+const orbit = (extras.orbit || []).slice(0, 4);
+---
+
+<div class="me" data-greetings={JSON.stringify(greetings)}>
+  <button class="me-bubble" type="button" aria-label="Show another message">
+    <span class="me-bubble-text">{greetings[0]}</span>
+  </button>
+
+  <div class="me-stage" data-flipped="false">
+    <div class="me-face me-front">
+      {frontIsCartoon && (
+        <svg
+          class="cartoon"
+          viewBox="0 0 240 240"
+          role="img"
+          aria-label={`Illustrated avatar of ${site.name}`}
+          style={`--skin:${c.skin};--hair:${c.hair};--jacket:${c.jacket};--shirt:${c.shirt}`}
+        >
+          <defs>
+            <clipPath id="me-clip"><circle cx="120" cy="120" r="118" /></clipPath>
+          </defs>
+          <circle cx="120" cy="120" r="118" fill="var(--sky)" />
+          <circle cx="44" cy="52" r="22" fill="#fff" opacity=".35" />
+          <circle cx="204" cy="34" r="9" fill="#fff" opacity=".45" />
+          <g clip-path="url(#me-clip)">
+            <!-- body -->
+            <path d="M24 244 C24 196 66 172 120 172 C174 172 216 196 216 244 Z" fill="var(--jacket)" />
+            <path d="M96 172 L120 214 L144 172 Z" fill="var(--shirt)" />
+            <path d="M96 172 L112 178 L120 214 L92 196 Z" fill="#000" opacity=".22" />
+            <path d="M144 172 L128 178 L120 214 L148 196 Z" fill="#000" opacity=".22" />
+            <!-- neck -->
+            <path d="M103 142 H137 V176 C130 186 110 186 103 176 Z" fill="var(--skin)" />
+            <path d="M103 156 C112 166 128 166 137 156 V166 C128 174 112 174 103 166 Z" fill="#000" opacity=".16" />
+            <!-- ears -->
+            <ellipse cx="75" cy="110" rx="7" ry="11" fill="var(--skin)" />
+            <ellipse cx="165" cy="110" rx="7" ry="11" fill="var(--skin)" />
+            <!-- head -->
+            <ellipse cx="120" cy="104" rx="46" ry="52" fill="var(--skin)" />
+            {c.beard && (
+              <path
+                d="M75 106 C76 150 96 166 120 166 C144 166 164 150 165 106 C160 126 146 136 120 136 C94 136 80 126 75 106 Z"
+                fill="var(--hair)"
+                opacity=".94"
+              />
+            )}
+            <!-- mouth -->
+            <path d="M107 143 Q120 153 133 143 Q120 148 107 143 Z" fill="#fff" />
+            <path d="M106 142 Q120 154 134 142" fill="none" stroke="#8a4b3c" stroke-width="2.4" stroke-linecap="round" />
+            <!-- nose -->
+            <path d="M121 106 Q114 123 123 124" fill="none" stroke="#000" stroke-opacity=".28" stroke-width="3" stroke-linecap="round" />
+            <!-- hair -->
+            <path
+              d="M72 104 C66 54 98 40 124 40 C154 40 176 58 168 104 C166 86 156 72 140 68 C118 76 92 74 76 94 Z"
+              fill="var(--hair)"
+            />
+            <!-- eyebrows -->
+            <path d="M90 92 Q102 85 114 91" fill="none" stroke="var(--hair)" stroke-width="4.5" stroke-linecap="round" />
+            <path d="M126 91 Q138 85 150 92" fill="none" stroke="var(--hair)" stroke-width="4.5" stroke-linecap="round" />
+            <!-- eyes -->
+            <g class="eyes">
+              <ellipse cx="102" cy="105" rx="5.5" ry="6.5" fill="#1a1410" />
+              <ellipse cx="138" cy="105" rx="5.5" ry="6.5" fill="#1a1410" />
+              <circle cx="104" cy="102.5" r="1.8" fill="#fff" />
+              <circle cx="140" cy="102.5" r="1.8" fill="#fff" />
+            </g>
+            {c.glasses && (
+              <g fill="none" stroke="#1c1b19" stroke-width="3">
+                <rect x="85" y="93" width="34" height="26" rx="9" />
+                <rect x="121" y="93" width="34" height="26" rx="9" />
+                <path d="M119 104 H121" />
+              </g>
+            )}
+          </g>
+          <!-- waving hand -->
+          <g class="wave">
+            <path d="M190 232 C186 206 192 184 202 160" fill="none" stroke="var(--jacket)" stroke-width="26" stroke-linecap="round" />
+            <rect x="190" y="124" width="26" height="34" rx="13" fill="var(--skin)" />
+            <rect x="183" y="138" width="14" height="9" rx="4.5" fill="var(--skin)" transform="rotate(-24 190 142)" />
+          </g>
+        </svg>
+      )}
+      {frontIsBitmoji && <img class="me-img" src={extras.bitmoji} alt={`Avatar of ${site.name}`} width="240" height="240" />}
+      {frontIsPhoto && <img class="me-img me-photo" src={site.photo} alt={`Photo of ${site.name}`} width="240" height="240" />}
+    </div>
+    {canFlip && (
+      <div class="me-face me-back">
+        <img class="me-img me-photo" src={site.photo} alt={`Photo of ${site.name}`} width="240" height="240" />
+      </div>
+    )}
+    {orbit.map((label, i) => (
+      <span class={`orbit o${i + 1}`} aria-hidden="true">{label}</span>
+    ))}
+  </div>
+
+  {canFlip && (
+    <button class="me-flip" type="button" aria-pressed="false">Show real photo</button>
+  )}
+</div>
+
+<script>
+  document.querySelectorAll<HTMLElement>('.me').forEach((root) => {
+    const bubble = root.querySelector<HTMLButtonElement>('.me-bubble');
+    const text = root.querySelector<HTMLElement>('.me-bubble-text');
+    const stage = root.querySelector<HTMLElement>('.me-stage');
+    const flip = root.querySelector<HTMLButtonElement>('.me-flip');
+    let messages: string[] = [];
+    try { messages = JSON.parse(root.dataset.greetings || '[]'); } catch { messages = []; }
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let i = 0;
+
+    const show = (next: number) => {
+      if (!text || messages.length === 0) return;
+      i = (next + messages.length) % messages.length;
+      text.classList.add('swap');
+      window.setTimeout(() => {
+        text.textContent = messages[i];
+        text.classList.remove('swap');
+      }, reduce ? 0 : 140);
+    };
+
+    bubble?.addEventListener('click', () => show(i + 1));
+    stage?.addEventListener('click', () => show(i + 1));
+
+    // Rotate messages by itself until the visitor interacts.
+    let auto = !reduce && messages.length > 1 ? window.setInterval(() => show(i + 1), 6000) : undefined;
+    const stopAuto = () => { if (auto) { window.clearInterval(auto); auto = undefined; } };
+    bubble?.addEventListener('click', stopAuto);
+    stage?.addEventListener('click', stopAuto);
+
+    flip?.addEventListener('click', () => {
+      if (!stage) return;
+      const flipped = stage.dataset.flipped !== 'true';
+      stage.dataset.flipped = String(flipped);
+      flip.setAttribute('aria-pressed', String(flipped));
+      flip.textContent = flipped ? 'Show avatar' : 'Show real photo';
+    });
+  });
+</script>

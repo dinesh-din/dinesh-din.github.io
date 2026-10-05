@@ -9,7 +9,12 @@ export async function getStaticPaths() {
 
 const { entry } = Astro.props;
 const { Content } = await render(entry);
-const { title, summary, stack, repo, demo, image, gallery } = entry.data;
+const { title, summary, stack, repo, demo, image, gallery, problem, approach, next } = entry.data;
+const study = [
+  { k: 'The problem', v: problem },
+  { k: 'What I built', v: approach },
+  { k: 'What I would do next', v: next },
+].filter((x) => x.v);
 ---
 
 <Base title={title} description={summary}>
@@ -28,6 +33,16 @@ const { title, summary, stack, repo, demo, image, gallery } = entry.data;
         </div>
       )}
       {image && <img class="cover" src={image} alt={`${title} screenshot`} />}
+      {study.length > 0 && (
+        <div class="study">
+          {study.map((x) => (
+            <div class="study-box">
+              <h3>{x.k}</h3>
+              <p>{x.v}</p>
+            </div>
+          ))}
+        </div>
+      )}
       <div class="prose">
         <Content />
       </div>
