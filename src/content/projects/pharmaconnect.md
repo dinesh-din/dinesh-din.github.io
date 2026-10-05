@@ -1,25 +1,33 @@
 ---
 title: PharmaConnect Enterprise Healthcare Platform
-summary: "A full-stack healthcare platform with an Angular frontend and Spring Boot REST APIs on AWS, delivering 99.9% uptime and 92% test coverage."
+summary: "A full-stack healthcare platform for ordering medicine and booking doctor appointments, with a React frontend, Spring Boot REST APIs and JWT-secured access. Delivered 99.9% uptime and 92% test coverage."
 status: shipped
 order: 2
-stack: [Angular, Spring Boot, MySQL, AWS, Jenkins, JWT]
+stack: [React, Spring Boot, MySQL, AWS, Jenkins, JWT]
+repo: https://github.com/dinesh-din/Pharma-Connect
 ---
 
 ## Overview
 
-PharmaConnect is an enterprise healthcare platform. It pairs an Angular frontend with Spring Boot REST APIs backed by MySQL, deployed on AWS and built and shipped through Jenkins pipelines.
+PharmaConnect brings two everyday healthcare tasks into one platform: ordering medicine and scheduling doctor appointments. A React frontend talks to Spring Boot REST APIs backed by MySQL, and the whole system is deployed on AWS and shipped through Jenkins pipelines.
 
-## What I built
+## What it does
 
-- Built the **Angular** frontend and the **Spring Boot** REST APIs behind it.
-- Secured the platform with **JWT authentication and role-based access control (RBAC)**.
-- Modeled and stored data in **MySQL**.
-- Deployed on **AWS** with **Jenkins** handling CI/CD.
+- **Medicine ordering:** users browse and order medicine online.
+- **Doctor appointments:** users schedule appointments with doctors.
+- **Secure access:** sign-in is protected with **JWT authentication** and **role-based access control (RBAC)**, so each type of user only sees what they should.
+
+## How it's built
+
+- **Client:** a **React** single-page app (`PharmaCareClient`).
+- **Server:** a **Spring Boot** REST API (`PharmaCareServer`) with data stored in **MySQL**.
+- **Delivery:** **Jenkins** pipeline configuration (`jenkins/`) automates builds and deployment to **AWS**.
 
 ## Results
 
 - **99.9% uptime**
 - **92% test coverage**
 
-> Add context here: who the users are, the roles you modeled in RBAC, how your Jenkins pipeline runs tests and deploys, and your testing approach.
+The full source is on [GitHub](https://github.com/dinesh-din/Pharma-Connect).
+
+> Add the details that make this stand out: who the users are, which roles you modeled in RBAC, how the Jenkins pipeline runs tests and deploys, and how you reached 92% coverage.
