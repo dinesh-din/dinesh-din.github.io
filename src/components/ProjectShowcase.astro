@@ -131,22 +131,28 @@ const pad = (n: number) => String(n).padStart(2, '0');
       }, 6500);
     };
 
-    // Any manual control stops the autoplay for good.
-    const manual = (fn: () => void) => () => { stopAuto(); fn(); };
+        // Any manual control pauses the autoplay; it picks up again after 12 seconds without activity.
+    let resume: number | undefined;
+    const pauseThenResume = () => {
+      stopAuto();
+      window.clearTimeout(resume);
+      resume = window.setTimeout(startAuto, 12000);
+    };
+    const manual = (fn: () => void) => () => { pauseThenResume(); fn(); };
     carousel.querySelector('.prev')?.addEventListener('click', manual(() => go(index - 1)));
     carousel.querySelector('.next')?.addEventListener('click', manual(() => go(index + 1)));
     dots.forEach((d, k) => d.addEventListener('click', manual(() => go(k))));
 
     carousel.addEventListener('keydown', (e) => {
-      if (e.key === 'ArrowLeft') { e.preventDefault(); stopAuto(); go(index - 1); }
-      if (e.key === 'ArrowRight') { e.preventDefault(); stopAuto(); go(index + 1); }
+      if (e.key === 'ArrowLeft') { e.preventDefault(); pauseThenResume(); go(index - 1); }
+      if (e.key === 'ArrowRight') { e.preventDefault(); pauseThenResume(); go(index + 1); }
     });
 
     carousel.addEventListener('mouseenter', () => { hovering = true; });
     carousel.addEventListener('mouseleave', () => { hovering = false; });
     carousel.addEventListener('focusin', () => { hovering = true; });
     carousel.addEventListener('focusout', () => { hovering = false; });
-    carousel.addEventListener('touchstart', stopAuto, { passive: true });
+    carousel.addEventListener('touchstart', pauseThenResume, { passive: true });
 
     if ('IntersectionObserver' in window) {
       new IntersectionObserver((entries) => {

@@ -10,11 +10,17 @@ import { extras } from '../extras';
 
 const projects = (await getCollection('projects')).sort((a, b) => a.data.order - b.data.order);
 
-const stats = [
-  ...extras.stats,
-  { value: projects.length, decimals: 0, suffix: '', label: 'Personal projects' },
-  { value: 3, decimals: 0, suffix: '', label: 'Clouds: AWS, Azure and GCP' },
-];
+// Fall back to sensible defaults if extras.ts is an older copy without these lists.
+type Item = { big: string; text: string };
+const valid = (list: unknown): Item[] =>
+  Array.isArray(list) ? (list as Item[]).filter((i) => i && typeof i.big === 'string' && typeof i.text === 'string') : [];
+const pharmaItems: Item[] = valid(extras.stats).length
+  ? valid(extras.stats)
+  : [{ big: '99.9%', text: 'Uptime on PharmaConnect, with 92% test coverage' }];
+const endToEnd: Item[] = valid((extras as { endToEnd?: unknown }).endToEnd).length
+  ? valid((extras as { endToEnd?: unknown }).endToEnd)
+  : [{ big: 'Schema to cloud', text: 'Database, API, UI and deployment, end to end' }];
+const projectItems = projects.map((p, i) => ({ big: `${i + 1} of ${projects.length}`, text: p.data.title }));
 const facts = extras.funFacts || [];
 const building = projects.filter((p) => p.data.status === 'in-progress');
 const achievements = extras.achievements || [];
@@ -59,16 +65,20 @@ const writeHref = isGmail
   <section class="stats" aria-label="Highlights">
     <div class="wrap">
       <div class="stat-grid">
-        {stats.map((s) => (
-          <div class="stat">
-            <div class="stat-value">
-              <span data-count={s.value} data-decimals={s.decimals}>{s.value.toFixed(s.decimals)}</span>{s.suffix}
-            </div>
-            <div class="stat-label">{s.label}</div>
-          </div>
-        ))}
+        <div class="stat rot-tile" data-items={JSON.stringify(pharmaItems)} data-interval="5000">
+          <div class="stat-value rot-big">{pharmaItems[0].big}</div>
+          <div class="stat-label rot-text">{pharmaItems[0].text}</div>
+        </div>
+        <a class="stat proj-tile" href="#projects" data-items={JSON.stringify(projectItems)} data-total={projects.length} title="See the projects">
+          <span class="stat-value proj-big">{projects.length}</span>
+          <span class="stat-label proj-text">Personal projects</span>
+        </a>
+        <div class="stat rot-tile" data-items={JSON.stringify(endToEnd)} data-interval="7000">
+          <div class="stat-value stat-words rot-big">{endToEnd[0].big}</div>
+          <div class="stat-label rot-text">{endToEnd[0].text}</div>
+        </div>
         {facts.length > 0 && (
-          <button class="stat fun-tile" type="button" data-facts={JSON.stringify(facts)} aria-live="polite" title="Click for another fun fact">
+          <button class="stat fun-tile" type="button" data-facts={JSON.stringify(facts)} title="Hover to pause, click for the next one">
             <span class="stat-value fun-big">{facts[0].big}</span>
             <span class="stat-label fun-text">{facts[0].text}</span>
           </button>
@@ -179,6 +189,59 @@ const writeHref = isGmail
 </Base>
 
 <script>
+  // Tiles that change by themselves: the PharmaConnect tile and the "Schema to cloud" tile.
+  document.querySelectorAll<HTMLElement>('.rot-tile').forEach((tile) => {
+    let items: { big: string; text: string }[] = [];
+    try { items = JSON.parse(tile.dataset.items || '[]'); } catch { items = []; }
+    const big = tile.querySelector<HTMLElement>('.rot-big');
+    const text = tile.querySelector<HTMLElement>('.rot-text');
+    if (items.length < 2 || !big || !text) return;
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let at = 0;
+    let paused = false;
+    const next = () => {
+      at = (at + 1) % items.length;
+      const paint = () => { big.textContent = items[at].big; text.textContent = items[at].text; };
+      if (reduce) { paint(); return; }
+      tile.classList.add('swap');
+      window.setTimeout(() => { paint(); tile.classList.remove('swap'); }, 220);
+    };
+    tile.addEventListener('mouseenter', () => { paused = true; });
+    tile.addEventListener('mouseleave', () => { paused = false; });
+    window.setInterval(() => { if (!paused && !document.hidden) next(); }, Number(tile.dataset.interval) || 6000);
+  });
+</script>
+
+<script>
+  // "5 Personal projects" tile: steps through each project, then goes back to the total.
+  const projTile = document.querySelector<HTMLElement>('.proj-tile');
+  if (projTile) {
+    let items: { big: string; text: string }[] = [];
+    try { items = JSON.parse(projTile.dataset.items || '[]'); } catch { items = []; }
+    const pBig = projTile.querySelector<HTMLElement>('.proj-big');
+    const pText = projTile.querySelector<HTMLElement>('.proj-text');
+    if (items.length > 1 && pBig && pText) {
+      const reduceP = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const states = [{ big: projTile.dataset.total || String(items.length), text: 'Personal projects' }, ...items];
+      let at = 0;
+      let pausedP = false;
+      const paintP = (st: { big: string; text: string }) => { pBig.textContent = st.big; pText.textContent = st.text; };
+      const advance = () => {
+        at = (at + 1) % states.length;
+        if (reduceP) { paintP(states[at]); return; }
+        projTile.classList.add('swap');
+        window.setTimeout(() => { paintP(states[at]); projTile.classList.remove('swap'); }, 220);
+      };
+      projTile.addEventListener('mouseenter', () => { pausedP = true; });
+      projTile.addEventListener('mouseleave', () => { pausedP = false; });
+      projTile.addEventListener('focus', () => { pausedP = true; });
+      projTile.addEventListener('blur', () => { pausedP = false; });
+      window.setInterval(() => { if (!pausedP && !document.hidden) advance(); }, 3500);
+    }
+  }
+</script>
+
+<script>
   const tile = document.querySelector<HTMLElement>('.fun-tile');
   if (tile) {
     let facts: { big: string; text: string }[] = [];
@@ -186,21 +249,45 @@ const writeHref = isGmail
     const big = tile.querySelector<HTMLElement>('.fun-big');
     const text = tile.querySelector<HTMLElement>('.fun-text');
     if (facts.length > 1 && big && text) {
-      let last = -1;
-      try { last = Number(sessionStorage.getItem('fact') ?? -1); } catch {}
-      const show = (i: number) => {
+      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      // Shuffle once so every fact gets its turn before any repeats.
+      const order = facts.map((_, i) => i).sort(() => Math.random() - 0.5);
+      let pos = 0;
+      try {
+        const last = Number(sessionStorage.getItem('fact') ?? -1);
+        if (order[0] === last) order.push(order.shift() as number); // do not open on the same fact as last visit
+      } catch {}
+
+      const paint = (i: number) => {
         big.textContent = facts[i].big;
         text.textContent = facts[i].text;
-        last = i;
         try { sessionStorage.setItem('fact', String(i)); } catch {}
       };
-      const next = () => {
-        let i = Math.floor(Math.random() * facts.length);
-        if (i === last) i = (i + 1) % facts.length;
-        show(i);
+      const show = (i: number) => {
+        if (reduce) { paint(i); return; }
+        tile.classList.add('swap');
+        window.setTimeout(() => { paint(i); tile.classList.remove('swap'); }, 220);
       };
-      next(); // a different fact on every visit
-      tile.addEventListener('click', next);
+      const next = () => {
+        pos = (pos + 1) % order.length;
+        show(order[pos]);
+      };
+
+      paint(order[0]);
+
+      // Change by itself every 6 seconds; pause while the visitor is pointing at it or the tab is hidden.
+      let timer: number | undefined;
+      let paused = false;
+      const start = () => {
+        window.clearInterval(timer);
+        timer = window.setInterval(() => { if (!paused && !document.hidden) next(); }, 6000);
+      };
+      tile.addEventListener('mouseenter', () => { paused = true; });
+      tile.addEventListener('mouseleave', () => { paused = false; });
+      tile.addEventListener('focus', () => { paused = true; });
+      tile.addEventListener('blur', () => { paused = false; });
+      tile.addEventListener('click', () => { next(); start(); }); // clicking still skips ahead
+      start();
     }
   }
 </script>

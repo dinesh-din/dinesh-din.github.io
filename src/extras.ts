@@ -84,7 +84,6 @@ export const extras = {
   // click the tile for the next one. Edit, add or delete freely (keep "big" short).
   funFacts: [
     // Professional
-    { big: 'JWT', text: 'keeps every role-based route in PharmaConnect locked down' },
     { big: '2', text: 'frontend frameworks I ship with: Angular and React' },
     { big: '3', text: 'AI assistants and agents built as personal projects' },
     { big: 'Java', text: 'first, with AI added on top' },
@@ -101,7 +100,20 @@ export const extras = {
     { big: '\u263E / \u2600', text: 'light or dark? Try the button in the header' },
   ],
 
+  // First tile: rotates through the best facts about PharmaConnect.
   stats: [
-    { value: 99.9, decimals: 1, suffix: '%', label: 'Uptime on PharmaConnect, with 92% test coverage' },
+    { big: '99.9%', text: 'Uptime on PharmaConnect, my healthcare platform' },
+    { big: '92%', text: 'Test coverage on PharmaConnect' },
+    { big: 'JWT', text: 'Role-based access on every PharmaConnect route' },
+    { big: 'AWS', text: 'Where PharmaConnect runs, shipped through Jenkins' },
+  ],
+
+  // Third tile: rotates through what "end to end" means for you.
+  endToEnd: [
+    { big: 'Schema to cloud', text: 'Database, API, UI and deployment, end to end' },
+    { big: 'Idea to agent', text: 'Prompts, tools and memory for LLM agents in Python' },
+    { big: 'Commit to prod', text: 'CI/CD pipelines with Jenkins and GitHub Actions' },
+    { big: 'Bug to fix', text: 'Root cause analysis and production support' },
+    { big: 'Prompt to product', text: 'Spring AI and OpenAI features inside real apps' },
   ],
 };
