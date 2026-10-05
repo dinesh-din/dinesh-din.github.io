@@ -11,13 +11,19 @@ export interface Job {
 
 export const site = {
   name: 'Dinesh Mamidi',
-  role: 'Full-stack Java engineer · AI',
-  tagline:
-    'I build full-stack applications on Java and Spring, from the database to the UI, and I am building AI agents and LLM-powered features on top of them.',
   about: [
-    'I am a full-stack engineer who works mainly in Java. I like taking a feature from schema to API to interface and making it reliable in production.',
-    'I have shipped a healthcare platform on Angular, Spring Boot and AWS, and built a generative AI chat and image app with React, Spring Boot, Spring AI and OpenAI. Now I am extending that into agent workflows with LangGraph, documented in my current build below.',
-  ],
+      'I am a full-stack engineer who works mainly in Java and Spring. I like taking a feature from schema to API to interface and making it reliable in production, with solid tests, monitoring and clean deployments on AWS, Azure and GCP.',
+      'I have shipped a healthcare platform on React, Spring Boot and AWS, and I build AI features on the same stack: a chat and image app on Spring AI and OpenAI, and a conversational reservation assistant on the Linq iMessage API.',
+      'Beyond Java, I build AI agents in Python. My autonomous coding agent writes, tests and commits a new solution every day using Claude, and I am now building a LangGraph research assistant that plans, searches and writes cited reports.',
+    ],
+    role: 'Java Full-Stack Engineer · AI',
+    tagline:
+      'I build production-grade applications on Java and Spring, from REST APIs to the UI, and add AI on top: LLM chat, RAG and autonomous agents. Explore my personal projects below.',
+    // Quick-glance chips shown under the intro. Edit freely.
+    highlights: ['Java', 'Spring Boot', 'Spring AI', 'Angular / React', 'AWS', 'LLM agents'],
+    projectsTitle: 'Personal projects',
+    projectsIntro:
+      'Hands-on builds where I combine Java and Spring with AI: chat and image apps, conversational assistants and autonomous agents. Each links to its source on GitHub.',
   photo: '/profile.jpg',
   location: 'Dallas Open to relocate, All over USA',
   email: 'dinesh.26java@gmail.com',

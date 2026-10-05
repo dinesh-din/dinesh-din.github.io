@@ -2,7 +2,7 @@
 title: Autonomous Research Assistant
 summary: A LangGraph agent that plans a question, researches it in parallel across the web and local PDFs, critiques its own findings, and writes a cited report.
 status: in-progress
-order: 3
+order: 5
 stack: [Python, LangGraph, FastAPI, Chroma, Claude, LangSmith]
 ---
 

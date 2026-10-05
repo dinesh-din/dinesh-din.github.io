@@ -178,6 +178,12 @@ footer { padding: 32px 0 48px; color: var(--muted); font-size: 0.9rem; border-to
 @media (max-width: 700px) {
   .hero-grid { flex-direction: column-reverse; align-items: flex-start; }
   .avatar { width: 150px; height: 150px; }
-
-  section[id] { scroll-margin-top: 70px; }
 }
+
+/* Keep section titles clear of the sticky header when jumping to #anchors */
+section[id] { scroll-margin-top: 70px; }
+
+/* Hero chips and section intro */
+.hero-tags { margin-top: 28px; }
+.hero-tags .tag { font-size: 0.85rem; padding: 4px 12px; border-radius: 999px; color: var(--text); background: var(--surface); }
+.section-intro { color: var(--muted); max-width: 640px; margin: -12px 0 28px; }

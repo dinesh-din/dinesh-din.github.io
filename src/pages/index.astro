@@ -15,8 +15,12 @@ const statusLabel = { shipped: 'Shipped', 'in-progress': 'In progress', planned:
         <h1>Hi, I'm {site.name}.</h1>
         <p class="lead">{site.tagline}</p>
         <div class="cta">
-          <a class="btn primary" href="#projects">See my work</a>
+          <a class="btn primary" href="#projects">See my projects</a>
           <a class="btn" href="#contact">Get in touch</a>
+          {site.resume && <a class="btn" href={site.resume} target="_blank" rel="noopener">Resume</a>}
+        </div>
+        <div class="tags hero-tags">
+          {site.highlights.map((h) => <span class="tag">{h}</span>)}
         </div>
       </div>
       {site.photo && (
@@ -56,7 +60,8 @@ const statusLabel = { shipped: 'Shipped', 'in-progress': 'In progress', planned:
 
   <section id="projects">
     <div class="wrap">
-      <h2>Projects</h2>
+      <h2>{site.projectsTitle}</h2>
+      <p class="section-intro">{site.projectsIntro}</p>
       <div class="grid">
         {projects.map((p) => (
           <a class="card" href={`/projects/${p.id}/`}>
