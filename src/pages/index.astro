@@ -16,9 +16,7 @@ const statusLabel = { shipped: 'Shipped', 'in-progress': 'In progress', planned:
         <p class="lead">{site.tagline}</p>
         <div class="cta">
           <a class="btn primary" href="#projects">See my work</a>
-          <a class="btn" href={site.email ? `mailto:${site.email}` : site.links.github}>
-            {site.email ? 'Get in touch' : 'View my GitHub'}
-          </a>
+          <a class="btn" href="#contact">Get in touch</a>
         </div>
       </div>
       {site.photo && (
