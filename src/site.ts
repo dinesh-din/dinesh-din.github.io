@@ -26,7 +26,7 @@ export const site = {
       'Hands-on builds where I combine Java and Spring with AI: chat and image apps, conversational assistants and autonomous agents. Each links to its source on GitHub.',
   photo: '/profile.jpg',
   location: 'Dallas Open to relocate, All over USA',
-  email: 'dinesh.26java@gmail.com',
+  email: 'todineshmamidi@gmail.com',
   links: {
     github: 'https://github.com/dinesh-din',
     linkedin: 'https://www.linkedin.com/in/dineshmamidi08/',
