@@ -15,17 +15,18 @@ export const site = {
       'I am a full-stack engineer who works mainly in Java and Spring. I like taking a feature from schema to API to interface and making it reliable in production, with solid tests, monitoring and clean deployments on AWS, Azure and GCP.',
       'I have shipped a healthcare platform on React, Spring Boot and AWS, and I build AI features on the same stack: a chat and image app on Spring AI and OpenAI, and a conversational reservation assistant on the Linq iMessage API.',
       'Beyond Java, I build AI agents in Python. My autonomous coding agent writes, tests and commits a new solution every day using Claude, and I am now building a LangGraph research assistant that plans, searches and writes cited reports.',
+      'My largest project is California Rights Navigator, a local-first AI assistant that helps people read an insurance denial letter and draft an appeal that cites California law, with every statement checked by code before it is shown.',
     ],
-    role: 'Java Full-Stack Engineer · AI',
+    role: 'Software Engineer - AI',
     tagline:
       'I build production-grade applications on Java and Spring, from REST APIs to the UI, and add AI on top: LLM chat, RAG and autonomous agents. Explore my personal projects below.',
     // Quick-glance chips shown under the intro. Edit freely.
     highlights: ['Java', 'Spring Boot', 'Spring AI', 'Angular / React', 'AWS', 'LLM agents'],
     projectsTitle: 'Personal projects',
     projectsIntro:
-      'Hands-on builds where I combine Java and Spring with AI: chat and image apps, conversational assistants and autonomous agents. Each links to its source on GitHub.',
+      'Hands-on builds where I combine Java and Spring with AI: chat and image apps, conversational assistants and autonomous agents. Most link to their source on GitHub, and my newest project is kept private.',
   photo: '/profile.jpg',
-  location: 'Dallas Open to relocate, All over USA',
+  location: 'Dallas, TX. Open to relocating anywhere in the USA',
   email: 'todineshmamidi@gmail.com',
   links: {
     github: 'https://github.com/dinesh-din',

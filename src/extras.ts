@@ -91,6 +91,8 @@ export const extras = {
     { big: '15', text: 'skill areas, from languages to observability' },
     { big: 'Kafka', text: 'is one of the many things you can search below' },
     { big: 'dinesh-din', text: 'is where all my code lives on GitHub' },
+    { big: '14', text: 'test letters I wrote to evaluate Rights Navigator' },
+    { big: 'Local AI', text: 'Rights Navigator runs on my own machine with Ollama' },
     // Just for fun (edit these to match your own sense of humour)
     { big: '\u221e', text: 'cups of coffee behind these projects' },
     { big: 'Ctrl+Z', text: 'my most trusted shortcut' },
@@ -115,5 +117,6 @@ export const extras = {
     { big: 'Commit to prod', text: 'CI/CD pipelines with Jenkins and GitHub Actions' },
     { big: 'Bug to fix', text: 'Root cause analysis and production support' },
     { big: 'Prompt to product', text: 'Spring AI and OpenAI features inside real apps' },
+    { big: 'Letter to law', text: 'Rights Navigator turns a denial letter into a cited appeal draft' },
   ],
 };

@@ -28,7 +28,11 @@ const pad = (n: number) => String(n).padStart(2, '0');
             )}
           </div>
           <div class="slide-body">
-            <span class="status">{statusLabel[p.data.status]}</span>
+            <div class="badges-row">
+              {p.data.featured && <span class="flag">★ Flagship</span>}
+              <span class="status">{statusLabel[p.data.status]}</span>
+              {p.data.private && <span class="status private">Private repository</span>}
+            </div>
             <h3>{p.data.title}</h3>
             <p>{p.data.summary}</p>
             <div class="tags">
@@ -58,12 +62,16 @@ const pad = (n: number) => String(n).padStart(2, '0');
     {projects.map((p) => (
       <a class="card" href={`/projects/${p.id}/`}>
         {p.data.image && <img class="card-img" src={p.data.image} alt="" loading="lazy" />}
-        <span class="status">{statusLabel[p.data.status]}</span>
+        <div class="badges-row">
+          {p.data.featured && <span class="flag">★ Flagship</span>}
+          <span class="status">{statusLabel[p.data.status]}</span>
+        </div>
         <h3>{p.data.title}</h3>
         <p>{p.data.summary}</p>
         <div class="tags">
           {p.data.stack.map((s) => <span class="tag">{s}</span>)}
         </div>
+        <span class="btn primary card-cta">Read case study</span>
       </a>
     ))}
   </div>

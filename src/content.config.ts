@@ -15,6 +15,12 @@ const projects = defineCollection({
     image: z.string().optional(),
     gallery: z.array(z.string()).default([]),
     // Optional case-study boxes shown above the write-up on the project page.
+    // Flagship projects get a badge and sort wherever `order` puts them.
+    featured: z.boolean().default(false),
+    // Private repositories show a note instead of a Source button.
+    private: z.boolean().default(false),
+    // Optional grouped tech stack, e.g. { Backend: ['Python', 'FastAPI'] }. Shown on the project page.
+    layers: z.record(z.array(z.string())).optional(),
     problem: z.string().optional(),
     approach: z.string().optional(),
     next: z.string().optional(),
