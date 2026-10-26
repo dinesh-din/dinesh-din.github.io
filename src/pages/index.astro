@@ -22,7 +22,7 @@ const endToEnd: Item[] = valid((extras as { endToEnd?: unknown }).endToEnd).leng
   : [{ big: 'Schema to cloud', text: 'Database, API, UI and deployment, end to end' }];
 const projectItems = projects.map((p, i) => ({ big: `${i + 1} of ${projects.length}`, text: p.data.title }));
 const facts = extras.funFacts || [];
-const building = projects.filter((p) => p.data.status === 'in-progress');
+const building = projects.filter((p) => p.data.status === 'in-progress').slice(0, 2);
 const achievements = extras.achievements || [];
 const testimonials = extras.testimonials || [];
 const formspree = extras.formspree || '';
