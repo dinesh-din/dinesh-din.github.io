@@ -9,7 +9,9 @@ export async function getStaticPaths() {
 
 const { entry } = Astro.props;
 const { Content } = await render(entry);
-const { title, summary, stack, repo, demo, image, gallery, problem, approach, next } = entry.data;
+const { title, summary, stack, repo, demo, image, gallery, problem, approach, next, featured, layers } = entry.data;
+const isPrivate = entry.data.private;
+const layerList = layers ? Object.entries(layers) : [];
 const study = [
   { k: 'The problem', v: problem },
   { k: 'What I built', v: approach },
@@ -21,11 +23,31 @@ const study = [
   <article class="project-page">
     <div class="wrap">
       <a class="back" href="/#projects">← All projects</a>
+      {(featured || isPrivate) && (
+        <div class="badges-row">
+          {featured && <span class="flag">★ Flagship</span>}
+          {isPrivate && <span class="status private">Private repository</span>}
+        </div>
+      )}
       <h1>{title}</h1>
       <p class="summary">{summary}</p>
-      <div class="tags">
-        {stack.map((s) => <span class="tag">{s}</span>)}
-      </div>
+      {layerList.length > 0 ? (
+        <div class="layers">
+          {layerList.map(([name, items]) => (
+            <div class="layer">
+              <span class="layer-name">{name}</span>
+              <div class="tags">{items.map((t) => <span class="tag">{t}</span>)}</div>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div class="tags">
+          {stack.map((s) => <span class="tag">{s}</span>)}
+        </div>
+      )}
+      {isPrivate && (
+        <p class="private-note">The source code is private. I am happy to walk through the design and code in an interview.</p>
+      )}
       {(repo || demo) && (
         <div class="links">
           {repo && <a class="btn" href={repo}>Source</a>}

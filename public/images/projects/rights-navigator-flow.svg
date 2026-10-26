@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 470" role="img" aria-labelledby="t d" font-family="Fredoka, Nunito, system-ui, sans-serif">
+  <title id="t">How Rights Navigator processes a letter</title>
+  <desc id="d">A letter is uploaded, read, routed by plan type, matched to statutes, drafted, verified by code, and finalized with sources and warnings. Plans outside California's review system stop with an explanation.</desc>
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#1a1240"/></marker>
+    <style>
+      .box{stroke:#1a1240;stroke-width:3;rx:14}
+      .t{font-size:19px;font-weight:700;fill:#1a1240;text-anchor:middle}
+      .s{font-size:14px;font-weight:600;fill:#1a1240;text-anchor:middle}
+      .l{stroke:#1a1240;stroke-width:3;fill:none;marker-end:url(#a)}
+      .n{font-size:14px;font-weight:700;fill:#5a4f8a;text-anchor:middle}
+    </style>
+  </defs>
+  <rect width="960" height="470" fill="#f1ecff"/>
+
+  <!-- row 1: intake -->
+  <rect class="box" x="30" y="40" width="190" height="80" fill="#ffd9ea"/>
+  <text class="t" x="125" y="76">1. Upload letter</text><text class="s" x="125" y="100">PDF, .txt or .md</text>
+
+  <rect class="box" x="290" y="40" width="190" height="80" fill="#c9e9ff"/>
+  <text class="t" x="385" y="76">2. Intake</text><text class="s" x="385" y="100">text and key facts</text>
+
+  <rect class="box" x="550" y="40" width="190" height="80" fill="#ffe9a3"/>
+  <text class="t" x="645" y="76">3. Plan-type gate</text><text class="s" x="645" y="100">which appeal system?</text>
+
+  <rect class="box" x="790" y="150" width="150" height="80" fill="#d6c9ff"/>
+  <text class="t" x="865" y="184">Stop and explain</text><text class="s" x="865" y="206">another path applies</text>
+
+  <path class="l" d="M220 80 H286"/>
+  <path class="l" d="M480 80 H546"/>
+  <path class="l" d="M740 80 H865 V146"/>
+  <text class="n" x="880" y="250">not DMHC or CDI</text>
+
+  <!-- gate down to row 2 -->
+  <path class="l" d="M645 120 V160 H125 V262"/>
+  <text class="n" x="380" y="152">DMHC or CDI plan</text>
+
+  <!-- row 2: drafting -->
+  <rect class="box" x="30" y="266" width="190" height="80" fill="#b8f3e5"/>
+  <text class="t" x="125" y="302">4. Retrieve</text><text class="s" x="125" y="326">statutes, hybrid search</text>
+
+  <rect class="box" x="290" y="266" width="190" height="80" fill="#ffd9ea"/>
+  <text class="t" x="385" y="302">5. Grade</text><text class="s" x="385" y="326">enough coverage?</text>
+
+  <rect class="box" x="550" y="266" width="190" height="80" fill="#c9e9ff"/>
+  <text class="t" x="645" y="302">6. Draft</text><text class="s" x="645" y="326">model writes cited bullets</text>
+
+  <rect class="box" x="790" y="266" width="150" height="80" fill="#ffe9a3"/>
+  <text class="t" x="865" y="302">7. Verify</text><text class="s" x="865" y="326">checks run in code</text>
+
+  <path class="l" d="M220 306 H286"/>
+  <path class="l" d="M480 306 H546"/>
+  <path class="l" d="M740 306 H786"/>
+  <path class="l" d="M385 266 V240 H125" style="stroke-dasharray:6 6"/>
+  <text class="n" x="260" y="232">broaden search</text>
+
+  <!-- repair loop -->
+  <path class="l" d="M865 346 V386 H645 V350" style="stroke-dasharray:6 6"/>
+  <text class="n" x="755" y="378">fail: repair or remove</text>
+
+  <!-- finalize -->
+  <rect class="box" x="230" y="400" width="470" height="52" fill="#00c9a0"/>
+  <text class="t" x="465" y="432" style="font-size:17px">8. Letter with sources, placeholders and warnings</text>
+  <path class="l" d="M865 346 V426 H704" style="stroke-dasharray:0"/>
+  <text class="n" x="800" y="446">pass</text>
+</svg>
